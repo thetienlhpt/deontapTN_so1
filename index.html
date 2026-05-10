@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ĐỀ ÔN TN THPT (ĐỀ SỐ 1) - THPT TRẦN HƯNG ĐẠO</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;700;800&family=Montserrat:wght@700;900&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --dark-navy: #020617;
+            --slate: #0f172a;
+            --electric-blue: #3b82f6;
+            --cyan: #22d3ee;
+            --crimson: #fb7185;
+            --emerald: #34d399;
+            --text-main: #f1f5f9;
+            --text-dim: #94a3b8;
+            --glass: rgba(30, 41, 59, 0.8);
+        }
+
+        * { 
+            box-sizing: border-box; 
+            -webkit-tap-highlight-color: transparent; 
+            transition: all 0.2s ease; 
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Be Vietnam Pro', sans-serif;
+            background-color: var(--dark-navy);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .ai-background {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; pointer-events: none; opacity: 0.3;
+            background-image: 
+                radial-gradient(circle at 2px 2px, rgba(59, 130, 246, 0.15) 1px, transparent 0),
+                linear-gradient(to right, rgba(59, 130, 246, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(59, 130, 246, 0.05) 1px, transparent 1px);
+            background-size: 30px 30px, 60px 60px, 60px 60px;
+        }
+
+        .ai-watermark {
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 0; font-size: 60vw;
+            color: var(--electric-blue); opacity: 0.04;
+            pointer-events: none; filter: blur(3px);
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 500px;
+            background: var(--slate);
+            position: relative;
+            display: none;
+            flex-direction: column;
+            height: 100vh;
+            z-index: 1;
+            box-shadow: 0 0 50px rgba(0,0,0,0.8);
+        }
+
+        .active { display: flex; }
+
+        header {
+            padding: 15px 20px;
+            background: rgba(2, 6, 23, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 2px solid var(--electric-blue);
+            text-align: center;
+            flex-shrink: 0;
+        }
+        .school-info { font-size: 10px; letter-spacing: 1.5px; color: var(--cyan); font-weight: 800; text-transform: uppercase; margin-bottom: 4px; }
+        .title-main { font-family: 'Montserrat', sans-serif; font-size: 18px; font-weight: 900; text-transform: uppercase; color: #fff; line-height: 1.2; }
+
+        .scrollable-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+            padding-bottom: 100px;
+            scrollbar-width: none;
+        }
+        .scrollable-content::-webkit-scrollbar { display: none; }
+
+        .fixed-footer {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 20px 25px 20px;
+            background: linear-gradient(to top, var(--dark-navy) 80%, transparent);
+            z-index: 100;
+        }
+
+        .login-card {
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            padding: 30px 20px;
+            border-radius: 20px;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-top: 20px;
+        }
+        .input-group { margin-bottom: 20px; text-align: left; }
+        label { display: block; font-size: 11px; font-weight: 700; color: var(--cyan); margin-bottom: 8px; text-transform: uppercase; }
+        input {
+            width: 100%; background: rgba(2, 6, 23, 0.7); border: 2px solid #334155; padding: 14px; color: white;
+            font-size: 16px; border-radius: 12px; font-family: inherit; outline: none;
+        }
+        input:focus { border-color: var(--electric-blue); }
+
+        .btn {
+            width: 100%; padding: 16px; background: linear-gradient(135deg, var(--electric-blue), #1e40af); color: white; border: none;
+            font-weight: 800; font-size: 15px; text-transform: uppercase; border-radius: 12px;
+            cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px;
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+        }
+        .btn:active { transform: scale(0.96); }
+        .btn-next { background: linear-gradient(135deg, var(--emerald), #059669); box-shadow: 0 5px 15px rgba(52, 211, 153, 0.3); }
+
+        .q-meta { font-weight: 800; color: var(--cyan); font-size: 12px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 1px; }
+        .q-text { font-size: 15.5px; font-weight: 700; line-height: 1.5; margin-bottom: 15px; color: #fff; }
+        
+        .code-snippet {
+            background: #020617; padding: 12px; border-radius: 10px; font-family: 'JetBrains Mono', monospace;
+            font-size: 13px; margin-bottom: 15px; border: 1px solid #1e293b; color: #a5f3fc;
+            white-space: pre-wrap; word-break: break-all; position: relative;
+        }
+
+        .option-grid { display: flex; flex-direction: column; gap: 10px; }
+        .option-card {
+            background: rgba(30, 41, 59, 0.5); border: 1.5px solid rgba(255,255,255,0.05); padding: 14px; border-radius: 12px;
+            display: flex; align-items: center; cursor: pointer;
+        }
+        .option-card.correct { border-color: var(--emerald); background: rgba(52, 211, 153, 0.15); color: var(--emerald); font-weight: 800; }
+        .option-card.wrong { border-color: var(--crimson); background: rgba(239, 68, 68, 0.15); color: var(--crimson); }
+        .opt-idx { width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; background: rgba(15, 23, 42, 0.8); border-radius: 8px; margin-right: 12px; font-weight: 800; color: var(--cyan); font-size: 13px; flex-shrink: 0; }
+
+        .tf-box { background: rgba(15, 23, 42, 0.6); padding: 14px; border-radius: 12px; margin-bottom: 12px; border-left: 4px solid var(--electric-blue); }
+        .tf-statement { font-size: 13px; margin-bottom: 10px; font-weight: 600; color: #cbd5e1; line-height: 1.4; }
+        .tf-btns { display: flex; gap: 8px; }
+        .tf-btn { flex: 1; padding: 12px; border: 1.5px solid #334155; background: rgba(30, 41, 59, 0.8); color: white; font-weight: 800; border-radius: 10px; font-size: 11px; text-transform: uppercase; }
+        .tf-btn.s-true { background: var(--emerald); border-color: var(--emerald); }
+        .tf-btn.s-false { background: var(--crimson); border-color: var(--crimson); }
+
+        .explanation { margin-top: 15px; padding: 14px; background: rgba(2, 6, 23, 0.8); border: 1px dashed var(--cyan); border-radius: 10px; font-size: 12px; line-height: 1.6; display: none; color: #94a3b8; }
+
+        .progress-container { height: 4px; width: 100%; background: #1e293b; flex-shrink: 0; }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, var(--electric-blue), var(--cyan)); width: 0%; box-shadow: 0 0 10px var(--cyan); }
+
+        .result-view { text-align: center; }
+        .score-circle { width: 150px; height: 150px; border-radius: 50%; border: 8px solid var(--electric-blue); margin: 20px auto; display: flex; flex-direction: column; justify-content: center; background: rgba(2, 6, 23, 0.5); }
+        .score-val { font-family: 'Montserrat', sans-serif; font-size: 48px; font-weight: 900; color: var(--cyan); }
+
+    </style>
+</head>
+<body>
+
+    <div class="ai-background"></div>
+    <div class="ai-watermark"><i class="fas fa-microchip"></i></div>
+
+    <!-- START SCREEN -->
+    <div class="app-container active" id="slide-start">
+        <header>
+            <div class="school-info">THPT TRẦN HƯNG ĐẠO</div>
+            <div class="title-main">ĐỀ ÔN TẬP TN THPT<br><span style="color:var(--cyan)">(LẦN 1 - 2026)</span></div>
+        </header>
+        <div class="scrollable-content" style="display: flex; flex-direction: column; justify-content: center;">
+            <div class="login-card">
+                <div class="input-group">
+                    <label>Họ tên thí sinh</label>
+                    <input type="text" id="userName" placeholder="Nhập tên em...">
+                </div>
+                <div class="input-group">
+                    <label>Số báo danh (SBD)</label>
+                    <input type="text" id="userClass" placeholder="Nhập SBD...">
+                </div>
+                <button class="btn" onclick="startApp(false)">BẮT ĐẦU LÀM BÀI <i class="fas fa-bolt"></i></button>
+            </div>
+            <p style="margin-top: 30px; font-size: 10px; color: var(--text-dim); text-transform: uppercase; font-weight: 800; text-align: center;">Môn: Tin học | Đề mã 0101</p>
+        </div>
+    </div>
+
+    <!-- QUIZ ENGINE -->
+    <div class="app-container" id="slide-quiz">
+        <header>
+            <div class="school-info" id="part-label">PHẦN I: TRẮC NGHIỆM</div>
+            <div class="title-main" style="font-size: 14px;">ĐỀ SỐ 1 - 2026</div>
+        </header>
+        <div class="progress-container"><div class="progress-bar" id="p-bar"></div></div>
+        
+        <div class="scrollable-content" id="quiz-main">
+            <!-- Nội dung câu hỏi động -->
+        </div>
+
+        <div class="fixed-footer">
+            <button class="btn btn-next" id="next-btn" style="display: none;" onclick="handleNext()">TIẾP THEO <i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+    <!-- RESULT SCREEN -->
+    <div class="app-container" id="slide-result">
+        <header>
+            <div class="school-info">KẾT QUẢ BÀI LÀM</div>
+        </header>
+        <div class="scrollable-content result-view">
+            <p id="res-info" style="margin-top: 10px; font-weight: 700; color: var(--text-dim); font-size: 14px;"></p>
+            <div class="score-circle">
+                <div class="score-val" id="res-score">0.0</div>
+                <div style="font-size: 10px; font-weight: 800; color: var(--text-dim);">ĐIỂM SỐ</div>
+            </div>
+            <div style="background: rgba(15, 23, 42, 0.6); padding: 15px; border-radius: 15px; margin-bottom: 20px; border: 1px solid rgba(255,255,255,0.05);">
+                <p style="font-size: 15px; margin: 0;">Số câu đúng: <span id="res-correct" style="color:var(--emerald); font-weight:800;">0</span> / <span id="res-total">0</span></p>
+                <div id="res-msg" style="margin-top: 10px; font-size: 13px; font-weight: 800; color: var(--cyan);"></div>
+            </div>
+            <button class="btn" style="background: transparent; border: 2px solid var(--electric-blue); color: var(--electric-blue); box-shadow: none;" onclick="startApp(true)">
+                <i class="fas fa-sync-alt"></i> LÀM LẠI BÀI TẬP (ĐẢO CÂU)
+            </button>
+        </div>
+    </div>
+
+    <script>
+        const part1DB = [
+            { q: "Đặc trưng nào sau đây KHÔNG là một trong những đặc trưng cơ bản của AI?", options: ["Khả năng suy luận.", "Khả năng học.", "Khả năng vận động.", "Khả năng nhận thức."], correct: 2, expl: "AI tập trung vào tư duy số. Vận động cơ học thuộc Robotics phần cứng." },
+            { 
+                q: "Cho đoạn mã HTML như sau:", 
+                code: '<ol start ="10">\n    <li>Khoa học tự nhiên</li>\n    <li>Khoa học xã hội</li>\n</ol>', 
+                qSuffix: "Phát biểu nào dưới đây SAI khi chạy đoạn lệnh trên?",
+                options: ["Đoạn lệnh trên bị sai cú pháp.", "Đoạn lệnh trên tạo một danh sách có thứ tự gồm hai phần tử.", "Các phần tử được đánh số 10 và 11.", "Kiểu đánh số là 1, 2, 3."], 
+                correct: 0, 
+                expl: "Cú pháp start='10' hoàn toàn đúng trong HTML." 
+            },
+            { q: "Phát biểu nào sau đây nêu đúng nhiệm vụ chính của người làm nghề quản trị mạng?", options: ["Phát triển các ứng dụng di động.", "Lập kế hoạch truyền thông cho tổ chức.", "Thực hiện khảo sát về nhu cầu của khách hàng.", "Quản lí và duy trì hệ thống mạng máy tính của tổ chức."], correct: 3, expl: "Nghề quản trị mạng đảm bảo hạ tầng kết nối ổn định và an toàn." },
+            { q: "Tôn trọng quyền riêng tư, không phát tán thông tin riêng tư của người khác khi chưa có sự cho phép của họ, tôn trọng quan điểm và suy nghĩ của mỗi người là thể hiện khía cạnh nào sau đây khi ứng xử nhân văn trong không gian mạng?", options: ["Lịch sự.", "Tôn trọng.", "Hỗ trợ.", "Thấu hiểu."], correct: 1, expl: "Đây là biểu hiện cốt lõi của tinh thần Tôn trọng trên mạng." },
+            { q: "Công việc chính của nghề sửa chữa và bảo trì máy tính liên quan đến vấn đề nào sau đây?", options: ["Sản xuất linh kiện máy tính.", "Xây dựng các hệ thống mới từ đầu.", "Duy trì sự ổn định của phần cứng và phần mềm của máy tính.", "Thiết kế giao diện người dùng."], correct: 2, expl: "Bảo trì tập trung vào việc duy trì hệ thống hiện có hoạt động ổn định." },
+            { 
+                q: "Giả sử có một đoạn văn bản có mã HTML như sau:", 
+                code: '<style>\n  p { font-size: 2em; }\n  em { font-size: 50%; }\n</style>\n<h1> Tiêu đề trang </h1>\n<p> Đây là văn bản <em> rất đặc biệt </em> </p>', 
+                qSuffix: "Khi đó cụm từ \"rất đặc biệt” sẽ có cỡ chữ như thế nào? Hãy chọn phương án trả lời đúng sau đây?",
+                options: [
+                    "Có cỡ chữ bằng 100% của phần tử gốc của văn bản.", 
+                    "Có cỡ chữ bằng 50% của cỡ chữ mặc định của trình duyệt.", 
+                    "Có cỡ chữ bằng 200% của cỡ chữ mặc định của trình duyệt.", 
+                    "Có cỡ chữ bằng cỡ chữ mặc định của trình duyệt."
+                ], 
+                correct: 3, 
+                expl: "p = 200% mặc định, em = 50% của p = 50% * 200% = 100% (bằng cỡ chữ mặc định)." 
+            },
+            { q: "Phần tử gốc của cây HTML là phần tử nào dưới đây?", options: ["<head>.", "<style>.", "<body>.", "<html>."], correct: 3, expl: "<html> bao bọc toàn bộ tài liệu, là gốc của cây DOM." },
+            { 
+                q: "Giả sử có mẫu định dạng CSS như sau:", 
+                code: '<style>\n  p { color: blue; }\n  * { color: green; }\n  p { color: magenta; }\n</style>', 
+                qSuffix: "Khi đó chữ tại thẻ <p> có màu gì?",
+                options: ["Màu xanh dương.", "Màu hồng.", "Màu xanh lá cây.", "Màu mặc định của trình duyệt."], 
+                correct: 1, 
+                expl: "Lệnh 'p' ưu tiên cao hơn '*' và lệnh sau cùng ghi đè lệnh trước. Magenta tương ứng màu hồng." 
+            },
+            { q: "Khi tham gia vào một diễn đàn trực tuyến, một người thường né tránh không giao lưu với những người Hồi giáo. Người này KHÔNG nhân văn vì không đồng tình với việc nào sau đây khi ứng xử trong không gian mạng?", options: ["Đối xử như nhau đối với mọi sắc tộc, tôn giáo.", "Bắt nạt, quấy rối trên không gian mạng.", "Đồng cảm với những người gặp khó khăn.", "Sử dụng từ ngữ tục tĩu, cá biệt."], correct: 0, expl: "Nhân văn yêu cầu bình đẳng, không phân biệt sắc tộc, tôn giáo." },
+            { q: "Wi-Fi thuộc loại mạng nào dưới đây?", options: ["Mạng cục bộ.", "Mạng diện rộng.", "Mạng cục bộ không dây.", "Mạng LAN."], correct: 2, expl: "Wi-Fi là công nghệ mạng cục bộ không dây (WLAN)." },
+            { q: "Để tạo một bảng có 4 hàng, 3 cột ta cần sử dụng bao nhiêu thẻ? Hãy chọn phương án đúng sau đây?", options: ["3 thẻ tr, 4 thẻ th và 12 thẻ td.", "3 thẻ tr và 12 thẻ td.", "4 thẻ tr, 3 thẻ th và 12 thẻ td.", "4 thẻ tr và 12 thẻ td."], correct: 3, expl: "Mỗi hàng là 1 <tr> (4 tr), mỗi ô là 1 <td> (12 td)." },
+            { 
+                q: "Có thể dùng thẻ hay thuộc tính nào dưới đây để viết hoa tất cả các kí tự trong một đoạn văn bản?", 
+                options: ['style="text-transform: uppercase;"', "<uppercase>.", "<caps>.", 'style="text-uppercase".'], 
+                correct: 0, 
+                expl: "Sử dụng thuộc tính CSS text-transform: uppercase để viết hoa toàn bộ." 
+            },
+            { q: "Trong các cách giải thích ý nghĩa của thuật ngữ 'Wireless Access Point', cách giải thích nào dưới đây là đúng?", options: ["Cách gọi đối với hub không dùng dây.", "Là thiết bị mà từ đó các thiết bị hỗ trợ truy cập không dây có thể truy cập vào mạng.", "Là một tên riêng trong tiếng Anh chỉ các thiết bị thu phát sóng không dây để truyền dữ liệu.", "Cách gọi đối với switch không dùng dây."], correct: 1, expl: "WAP là điểm truy cập cầu nối cho các thiết bị không dây." },
+            { q: "Thiết bị nào sau đây được tích hợp trợ lí ảo?", options: ["Điện thoại cảm ứng.", "Máy tính cầm tay.", "Máy quét mã vạch.", "Chuông báo cháy."], correct: 0, expl: "Smartphone hiện đại tích hợp các trợ lý ảo như Siri, Google Assistant." },
+            { q: "Modem có chức năng gì trong mạng máy tính? Hãy chọn phát biểu đúng dưới đây?", options: ["Điều khiển truy cập mạng.", "Lưu trữ dữ liệu.", "Chuyển đổi tín hiệu từ tín hiệu số thành tín hiệu tương tự và ngược lại.", "Kết nối các máy tính trong mạng nội bộ."], correct: 2, expl: "Modem là bộ điều chế/giải điều chế tín hiệu truyền thông." },
+            { q: "Phương án nào sau đây nêu đúng ba phương án thiết lập CSS?", options: ["CSS riêng, CSS ngoài và CSS nội tuyến.", "CSS trong, CSS ngoài và CSS nội tuyến.", "CSS riêng, CSS chung và CSS nội tuyến.", "CSS trong, CSS ngoài và CSS nội dung."], correct: 1, expl: "Ba cách thiết lập: Internal (trong), External (ngoài) và Inline (nội tuyến)." },
+            { q: "Việc trao đổi dữ liệu giữa các máy tính trong mạng cục bộ tuân thủ theo giao thức nào trong các giao thức dưới đây?", options: ["Giao thức DNS.", "Giao thức SMTP.", "Giao thức Ethernet.", "Giao thức TCP/IP."], correct: 2, expl: "Ethernet là chuẩn phổ biến nhất tại tầng vật lý và liên kết dữ liệu cho LAN." },
+            { q: "Cách nào dưới đây giúp tránh thông tin sai lệch khi đăng bài lên mạng xã hội?", options: ["Không cần kiểm tra nguồn tin trước khi chia sẻ.", "Đăng ngay lập tức để chia sẻ ý kiến của mình.", "Đọc kĩ, kiểm tra lại nội dung để tránh sai lệch hoặc gây hiểu nhầm.", "Chia sẻ mọi tin để nhanh chóng cập nhật thông tin mới nhất."], correct: 2, expl: "Kiểm chứng tin tức là khâu quan trọng nhất chống tin giả." },
+            { 
+                q: "Sau khi thực hiện lệnh sau, biến s sẽ có kết quả là? Hãy chọn phương án đúng?", 
+                code: 's1 = "3986443"\ns2 = ""\nfor ch in s1:\n    if int(ch) % 2 == 0:\n        s2 = s2 + ch\nprint(s2)',
+                options: ["39864.", "3986443.", "8644.", "443."], 
+                correct: 2, 
+                expl: "Vòng lặp lọc ra các chữ số chẵn: 8, 6, 4, 4." 
+            },
+            { 
+                q: "Câu lệnh nào sau đây tạo một nút gửi trong biểu mẫu?", 
+                options: ['<input type="reset">.', '<output type="submit">.', '<button type="button">.', '<button type="submit">.'], 
+                correct: 3, 
+                expl: "button hoặc input có type='submit' dùng để gửi dữ liệu form." 
+            },
+            { q: "Để chèn tệp ảnh vào trang web trong HTML, ta sử dụng thẻ nào trong các thẻ sau đây?", options: ["<jpg>.", "<img>.", "<png>.", "<images>."], correct: 1, expl: "Sử dụng thẻ <img> (image) để chèn ảnh." },
+            { q: "Lĩnh vực nào sau đây chưa thể ứng dụng AI một cách rộng rãi?", options: ["Sản xuất công nghiệp.", "Huấn luyện động vật làm xiếc.", "Phân tích thị trường.", "Nông nghiệp thông minh."], correct: 1, expl: "AI chưa thể thay thế cảm xúc và tương tác sinh học phức tạp trong việc huấn luyện xiếc." },
+            { q: "Bên cạnh những lợi ích to lớn, sự phát triển của AI còn kéo theo những nguy cơ cần được cảnh báo nào sau đây?", options: ["Áp lực thất nghiệp; Ảnh hưởng quyền ưu tiên; Khả năng thiếu minh bạch; Rủi ro về an ninh, an toàn.", "Áp lực kinh tế; Ảnh hưởng quyền riêng tư; Khả năng thiếu minh bạch; Rủi ro về an ninh, an toàn.", "Áp lực thất nghiệp; Ảnh hưởng quyền riêng tư; Khả năng thiếu minh bạch; Rủi ro về an ninh, an toàn.", "Áp lực thất nghiệp; Ảnh hưởng quyền riêng tư; Khả năng thiếu chuyên nghiệp; Rủi ro về an ninh, an toàn."], correct: 2, expl: "Các vấn đề chính: Thất nghiệp, Riêng tư, Minh bạch và An toàn." },
+            { q: "Yêu cầu về kiến thức nào dưới đây liên quan đến mạng máy tính đối với người làm trong nhóm nghề quản trị mạng trong ngành Công nghệ thông tin?", options: ["Biết cách sử dụng mạng xã hội an toàn.", "Biết cách cài đặt và cấu hình máy tính.", "Nắm được cấu trúc và hoạt động của mạng máy tính.", "Hiểu biết về lập trình và phát triển phần mềm."], correct: 2, expl: "Quản trị viên mạng bắt buộc phải hiểu hạ tầng kết nối." }
+        ];
+
+        const part2DB = [
+            { 
+                q: "Thông thường mạng có vài chục hoặc vài trăm máy trạm, hoạt động trong phạm vi một tòa nhà, một gia đình hay cơ quan cỡ nhỏ thì được gọi là mạng LAN, còn gọi là Mạng cục bộ hay Mạng nội bộ. MAN là loại mạng có số lượng máy trạm và phạm vi hoạt động lớn hơn so với LAN. Ở thời kì đầu mạng LAN chỉ sử dụng cáp mạng, hiện nay công nghệ truyền thông không dây giúp mạng Wi-Fi giúp các máy trạm trao đổi dữ liệu thuận tiện và dễ dàng hơn. Sau khi đọc nhận xét trên, một số bạn đưa ra ý kiến như sau:", 
+                sub: [
+                    { t: "a) MAN là loại mạng có số lượng máy trạm nhỏ hơn so với mạng LAN.", a: false },
+                    { t: "b) Mạng LAN còn được gọi là Mạng cục bộ hay Mạng nội bộ.", a: true },
+                    { t: "c) Mạng Wi-Fi ra đời sau, khi chưa có Wi-Fi các máy trạm phải dùng dây mạng để kết nối với nhau.", a: true },
+                    { t: "d) Phòng thực hành tin học của trường THPT Dầu Giây có khoảng 40 máy PC kết nối mạng với nhau để học sinh thực hành và giáo viên truy cập Internet. Mạng nội bộ của trường đó thuộc loại mạng MAN.", a: false }
+                ],
+                expl: "Mạng đô thị MAN lớn hơn LAN. Phòng máy trường học là mạng LAN."
+            },
+            { 
+                q: "Để quản lí nhân sự cho một công ty, người ta xây dựng một phần mềm với cơ sở dữ liệu quan hệ gồm 3 bảng có cấu trúc như sau:\nCANBO (MACB, Ten, NgaySinh, Luong, MaPh)\nPHONG (MaPh, TenPh, DiaChi)\nTRINHDOHOCVAN (MACB, TrinhDoHV, TrinhDoNN)\nSau khi tìm hiểu dữ liệu của phần mềm, các bạn học sinh đã đưa ra các nhận xét sau đây:", 
+                sub: [
+                    { t: "a) Trong mô hình quan hệ, về mặt cấu trúc thì dữ liệu được thể hiện trong các hàng.", a: true },
+                    { t: "b) MaPh là khóa chính của bảng CANBO.", a: false },
+                    { t: "c) Khi một cán bộ chuyển từ nơi khác đến, cần thực hiện thao tác thêm dữ liệu vào bảng CANBO và TRINHDOHOCVAN.", a: true },
+                    { t: "d) Để biết tên phòng và địa chỉ phòng của một cán bộ cần sử dụng bảng CANBO và bảng TRINHDOHOCVAN.", a: false }
+                ],
+                expl: "Tên và địa chỉ phòng nằm ở bảng PHONG. MaPh ở CANBO là khóa ngoài."
+            },
+            {
+                q: "Một cơ sở dữ liệu quản lí điểm có tên là QLDIEM, gồm có 3 bảng: hocsinh, mon, diem. Một số bạn học sinh đưa ra các ý kiến về khai thác cơ sở dữ liệu trên như sau:",
+                sub: [
+                    { t: "a) Sử dụng câu lệnh SQL là: SELECT * FROM diem WHERE idHocsinh = 3 để lọc ra điểm trung bình các môn của một học sinh có idHocsinh bằng 3.", a: true },
+                    { t: "b) Để nhập điểm trung bình môn Toán của một học sinh, nếu dữ liệu môn Toán đã có trong bảng mon và dữ liệu về học sinh đó chưa có trong bảng hocsinh thì thứ tự nhập là: Bước 1. Nhập bảng diem; Bước 2. Nhập bảng hocsinh.", a: false },
+                    { t: "c) Để trích xuất bảng điểm trung bình các môn của tất cả các học sinh, câu lệnh SQL sử dụng INNER JOIN 3 bảng là đúng.", a: true },
+                    { t: "d) Cần phải thêm một trường mới vào bảng hocsinh để lưu kết quả tính điểm trung bình chung các môn (có hệ số).", a: false }
+                ],
+                expl: "Phải có học sinh trước mới nhập được điểm. Không nên lưu dữ liệu tính toán được vào bảng."
+            },
+            {
+                q: "Một bạn học sinh làm trang web giới thiệu về đặc sản địa phương. Bạn học sinh đó đã đưa ra các nhận xét sau đây:",
+                sub: [
+                    { t: "a) Mỗi sản phẩm trong danh sách hiển thị trong trang Đặc sản cần có một siêu liên kết để dẫn đến bài viết giới thiệu chi tiết về sản phẩm đó.", a: true },
+                    { t: "b) Có nút điều hướng để chuyển sang hình ảnh bên trái hoặc bên phải trong tập hợp ảnh trong thanh trượt bảng chuyển hình ảnh.", a: true },
+                    { t: "c) Khi thêm ảnh hoặc video vào trang web, ảnh/video sẽ được hiển thị đúng kích thước sẵn có, không thể thay đổi được.", a: false },
+                    { t: "d) Sau khi hoàn thành, có thể xuất bản website ra một địa chỉ Internet để mọi người có thể xem được.", a: true }
+                ],
+                expl: "Kích thước ảnh/video hoàn toàn có thể thay đổi bằng CSS/HTML."
+            }
+        ];
+
+        let state = { questions: [], currentIdx: 0, score: 0, correctCount: 0, user: { name: '', class: '' }, tfBuffer: [] };
+
+        function playSound(isCorrect) {
+            const ctx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.connect(gain); gain.connect(ctx.destination);
+            osc.frequency.setValueAtTime(isCorrect ? 800 : 250, ctx.currentTime);
+            if (isCorrect) osc.frequency.exponentialRampToValueAtTime(1200, ctx.currentTime + 0.1);
+            else osc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.2);
+            gain.gain.setValueAtTime(0.06, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+            osc.start(); osc.stop(ctx.currentTime + 0.3);
+        }
+
+        function startApp(shouldShuffle) {
+            if (!shouldShuffle) {
+                const name = document.getElementById('userName').value;
+                const cls = document.getElementById('userClass').value;
+                if (!name || !cls) { alert("Em hãy nhập đủ Họ tên và SBD để làm bài nhé!"); return; }
+                state.user = { name, class: cls };
+            }
+            let p1 = [...part1DB].map(q => ({...q, type: 'mcq'}));
+            let p2 = [...part2DB].map(q => ({...q, type: 'tf'}));
+            if (shouldShuffle) {
+                p1 = p1.sort(() => Math.random() - 0.5);
+                p2 = p2.sort(() => Math.random() - 0.5);
+            }
+            state.questions = [...p1, ...p2];
+            state.currentIdx = 0; state.score = 0; state.correctCount = 0;
+            showSlide('slide-quiz');
+            renderQuestion();
+        }
+
+        function showSlide(id) {
+            document.querySelectorAll('.app-container').forEach(c => c.classList.remove('active'));
+            document.getElementById(id).classList.add('active');
+        }
+
+        function renderQuestion() {
+            const q = state.questions[state.currentIdx];
+            const main = document.getElementById('quiz-main');
+            const nextBtn = document.getElementById('next-btn');
+            const pBar = document.getElementById('p-bar');
+            const label = document.getElementById('part-label');
+            
+            main.scrollTop = 0;
+            nextBtn.style.display = 'flex';
+            pBar.style.width = `${(state.currentIdx / state.questions.length) * 100}%`;
+            label.innerText = q.type === 'mcq' ? "PHẦN I: TRẮC NGHIỆM" : "PHẦN II: ĐÚNG / SAI";
+            
+            let html = `<div class="q-meta">Câu hỏi ${state.currentIdx + 1} / ${state.questions.length}</div><div class="q-text">${q.q}</div>`;
+            
+            if (q.code) html += `<div class="code-snippet">${escapeHtml(q.code)}</div>`;
+            
+            if (q.qSuffix) html += `<div class="q-text" style="margin-top:0; margin-bottom:15px;">${q.qSuffix}</div>`;
+            
+            if (q.type === 'mcq') {
+                html += `<div class="option-grid">`;
+                q.options.forEach((opt, i) => {
+                    html += `<div class="option-card" onclick="handleMCQ(${i}, this)"><div class="opt-idx">${String.fromCharCode(65+i)}</div><div>${escapeHtml(opt)}</div></div>`;
+                });
+                html += `</div>`;
+            } else {
+                state.tfBuffer = new Array(q.sub.length).fill(null);
+                q.sub.forEach((sub, i) => {
+                    html += `<div class="tf-box"><div class="tf-statement">${sub.t}</div><div class="tf-btns">
+                        <button class="tf-btn" id="tf-${i}-true" onclick="handleTF(${i}, true)">ĐÚNG</button>
+                        <button class="tf-btn" id="tf-${i}-false" onclick="handleTF(${i}, false)">SAI</button>
+                    </div></div>`;
+                });
+            }
+            html += `<div class="explanation" id="expl"><strong><i class="fas fa-info-circle"></i> GIẢI THÍCH:</strong><br>${q.expl}</div>`;
+            main.innerHTML = html;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function handleMCQ(idx, el) {
+            const q = state.questions[state.currentIdx];
+            const cards = document.querySelectorAll('.option-card');
+            cards.forEach(c => c.onclick = null);
+            if (idx === q.correct) { el.classList.add('correct'); playSound(true); state.correctCount++; }
+            else { el.classList.add('wrong'); cards[q.correct].classList.add('correct'); document.getElementById('expl').style.display = 'block'; playSound(false); }
+        }
+
+        function handleTF(idx, val) {
+            const q = state.questions[state.currentIdx];
+            const actual = q.sub[idx].a;
+            const bT = document.getElementById(`tf-${idx}-true`), bF = document.getElementById(`tf-${idx}-false`);
+            bT.disabled = bF.disabled = true;
+            if (val === actual) { document.getElementById(`tf-${idx}-${val}`).classList.add(`s-${val}`); playSound(true); state.tfBuffer[idx] = true; }
+            else { document.getElementById(`tf-${idx}-${val}`).classList.add(`s-${val}`); document.getElementById(`tf-${idx}-${actual}`).style.border = "2px solid var(--emerald)"; document.getElementById('expl').style.display = 'block'; playSound(false); state.tfBuffer[idx] = false; }
+            if (state.tfBuffer.every(v => v !== null)) {
+                const correctSubs = state.tfBuffer.filter(v => v === true).length;
+                if (correctSubs === q.sub.length) state.correctCount++;
+            }
+        }
+
+        function handleNext() {
+            state.currentIdx++;
+            if (state.currentIdx < state.questions.length) renderQuestion();
+            else showResults();
+        }
+
+        function showResults() {
+            const finalScore = ((state.correctCount / state.questions.length) * 10).toFixed(1);
+            document.getElementById('res-info').innerText = `Thí sinh: ${state.user.name} | SBD: ${state.user.class}`;
+            document.getElementById('res-score').innerText = finalScore;
+            document.getElementById('res-correct').innerText = state.correctCount;
+            document.getElementById('res-total').innerText = state.questions.length;
+            let msg = finalScore >= 8 ? "XUẤT SẮC! TIẾP TỤC PHÁT HUY" : finalScore >= 5 ? "TẠM ỔN, HÃY ÔN TẬP KỸ HƠN" : "CẦN ÔN TẬP KỸ HƠN NHÉ!";
+            document.getElementById('res-msg').innerText = msg;
+            showSlide('slide-result');
+        }
+    </script>
+</body>
+</html>
